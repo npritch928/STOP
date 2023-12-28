@@ -16,7 +16,7 @@ getTime <- function(time){
   }
 }
 #Assume that the contact_week _*.csv files are in the nfl-big-data-bowl-2024 dataset
-data_direct = "./nfl-big-data-bowl-2024/" #"../../data/raw/"   
+data_direct = "./data/" #"../../data/raw/"   
 
 tacklesTib <- read_csv(paste0(data_direct, "tackles.csv"))
 contactTib <- read_csv(file = paste0(data_direct, "contact.csv"))
@@ -47,7 +47,7 @@ directions <- read_csv(file = paste0(data_dir, "tracking_week_",week,".csv")) %>
   summarise(mx = median(x))
 
 #This block of code will get the line of scrimmage and first down line for each play
-Lines <- read_csv("nfl-big-data-bowl-2024/plays.csv", 
+Lines <- read_csv("data/plays.csv", 
                   col_select = c("prePenaltyPlayResult","gameId", "playId", "yardsToGo", "yardlineNumber", "absoluteYardlineNumber",
                                  "yardlineSide", "possessionTeam", "quarter", "down", "offenseFormation", "defendersInTheBox", "passLength", "playResult", "gameClock"))%>% 
   left_join(gamesTib) %>%
@@ -169,7 +169,7 @@ read_csv(file = paste0(data_dir, "tracking_week_",week,".csv")) %>%
 }
 
 #Run in parallel using 9 cores
-plan(multisession(workers = 7))
+plan(multisession(workers = 8))
 future_map(1:9, label_tackles)
 future_map(1:9, label_tackles,run = T, plays = RunPlaysTib) 
 

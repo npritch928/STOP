@@ -1,6 +1,6 @@
 library(tidyverse)
 library(purrr)
-data_dir <- "./nfl-big-data-bowl-2024/"
+data_dir <- "./data/"
 playsTib <- read_csv(file = paste0(data_dir,"plays.csv")) %>% select(gameId, playId, ballCarrierId)
 
 XspeedDir <- function(dir, speed){

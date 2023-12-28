@@ -6,12 +6,12 @@ library(purrr)
 library(lubridate)
 source("./dataCleaning/helpers.R")
 # Need to be sure to have run "label_tracking.R" first or have contact_track_week_*.csv available
-directory <- "./nfl-big-data-bowl-2024/" #This is the directory where the data stored
+directory <- "./data/" #This is the directory where the data stored
 #There are a lot of players with missing birthdates
-Players <- read_csv("nfl-big-data-bowl-2024/players.csv",
+Players <- read_csv("data/players.csv",
   col_select = c("nflId", "weight", "position"))
 
-Sides <- read_csv("nfl-big-data-bowl-2024/games.csv",
+Sides <- read_csv("data/games.csv",
                   col_select = c("gameId", "homeTeamAbbr"))
 
 
@@ -112,13 +112,13 @@ contactData <- function(week, direct = directory, players = Players, speeds = Sp
   )
 }
 
-#plan(multisession(workers = 9))
-future_map_dfr(1:9, tackleData) %>% write_csv("nfl-big-data-bowl-2024/xYards_info.csv")
-future_map_dfr(1:9, contactData) %>% write_csv("nfl-big-data-bowl-2024/contact_info.csv")
-future_map_dfr(1:9, tackleData, ct=F) %>% write_csv("nfl-big-data-bowl-2024/xYards_info_full.csv")
-future_map_dfr(1:9, yardsGainedData)%>% write_csv("nfl-big-data-bowl-2024/YardsGained.csv")
+plan(multisession(workers = 8))
+future_map_dfr(1:9, tackleData) %>% write_csv("data/xYards_info.csv")
+future_map_dfr(1:9, contactData) %>% write_csv("data/contact_info.csv")
+future_map_dfr(1:9, tackleData, ct=F) %>% write_csv("data/xYards_info_full.csv")
+future_map_dfr(1:9, yardsGainedData)%>% write_csv("data/YardsGained.csv")
 #Get Running versions of same 
-future_map_dfr(1:9, tackleData, run = T) %>% write_csv("nfl-big-data-bowl-2024/xYards_info_run.csv")
-future_map_dfr(1:9, contactData, run = T) %>% write_csv("nfl-big-data-bowl-2024/contact_info_run.csv")
-future_map_dfr(1:9, tackleData, ct=F, run = T) %>% write_csv("nfl-big-data-bowl-2024/xYards_info_full_run.csv")
-future_map_dfr(1:9, yardsGainedData, run = T)%>% write_csv("nfl-big-data-bowl-2024/YardsGained_run.csv")
+future_map_dfr(1:9, tackleData, run = T) %>% write_csv("data/xYards_info_run.csv")
+future_map_dfr(1:9, contactData, run = T) %>% write_csv("data/contact_info_run.csv")
+future_map_dfr(1:9, tackleData, ct=F, run = T) %>% write_csv("data/xYards_info_full_run.csv")
+future_map_dfr(1:9, yardsGainedData, run = T)%>% write_csv("data/YardsGained_run.csv")

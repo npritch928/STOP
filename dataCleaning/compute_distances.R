@@ -1,24 +1,24 @@
 library(progressr)
 
-plays <- read_csv("./nfl-big-data-bowl-2024/plays.csv")
+plays <- read_csv("./data/plays.csv")
 
 #compute distances from ball carrier
-plan(multisession, workers = 16)
+plan(multisession, workers = 8)
 for(i in 1:9){
   print(i)
-  in_filename <- str_c("./nfl-big-data-bowl-2024/tracking_week_",i,".csv")
+  in_filename <- str_c("./data/tracking_week_",i,".csv")
   trk <- read_csv(in_filename)
-  out_filename <- str_c("./nfl-big-data-bowl-2024/dist_week",i,".csv")
+  out_filename <- str_c("./data/dist_week",i,".csv")
   write_csv(DistFullDataSet(trk, plays), out_filename, progress = TRUE) 
 }
 
 #Compute distances between all defensive players
-plan(multisession, workers = 16)
+plan(multisession, workers = 8)
 for(i in 1:9){
   print(i)
-  in_filename <- str_c("./nfl-big-data-bowl-2024/tracking_week_",i,".csv")
+  in_filename <- str_c("./data/tracking_week_",i,".csv")
   trk <- read_csv(in_filename)
-  out_filename <- str_c("./nfl-big-data-bowl-2024/dist_week_All_D",i,".csv")
+  out_filename <- str_c("./data/dist_week_All_D",i,".csv")
   write_csv(DistFullDataSetAllDPlayers(trk, plays), out_filename, progress = TRUE) 
 }
 
@@ -26,10 +26,10 @@ for(i in 1:9){
 #For distances need to first extract plays that are used
 
 pivotDistWiderBC <- function(week){
-  in_filename <- str_c("./nfl-big-data-bowl-2024/dist_week_",week,".csv")
-  out_filename <- str_c("./nfl-big-data-bowl-2024/dist_rankings_week_",week,".csv")
+  in_filename <- str_c("./data/dist_week_",week,".csv")
+  out_filename <- str_c("./data/dist_rankings_week_",week,".csv")
   
-  Usable_entries <- read_csv(str_c("./nfl-big-data-bowl-2024/tracking_week_",week,".csv")) %>% 
+  Usable_entries <- read_csv(str_c("./data/tracking_week_",week,".csv")) %>% 
     left_join(read_csv(in_filename))%>% 
     group_by(gameId, playId) %>%
     #label the offensive team
@@ -54,7 +54,7 @@ future_map(1:9, pivotDistWiderBC)
 
 #Need to pivot wider for distances to defenders
 pivotDistWider <- function(week){
-  in_filename <- str_c("./nfl-big-data-bowl-2024/dist_week_All_D",week,".csv")
+  in_filename <- str_c("./data/dist_week_All_D",week,".csv")
 
    read_csv(in_filename) %>%
       group_by(gameId, playId, frameId, CarrierId) %>%

@@ -12,7 +12,7 @@ library(dplyr)
 library(purrr)
 library(readr)
 
-data_dir = "nfl-big-data-bowl-2024/"
+data_dir = "data/"
 players = read.csv(file = paste0(data_dir, "player_heights.csv"))
 heights = players %>%
   select(nflId, height_yards)

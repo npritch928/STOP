@@ -2,7 +2,7 @@
 # player heights are stored as characters
 # this script will convert them to inches
 
-data_dir = "nfl-big-data-bowl-2024/"
+data_dir = "data/"
 players = read.csv(file = paste0(data_dir, "players.csv"))
 
 library(dplyr)

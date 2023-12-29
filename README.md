@@ -8,6 +8,7 @@ A public repository for the 2024 NFL Big Data Bowl
 - progressr
 - lubridate
 - gganimate
+- scales
 - git@github.com:skdeshpande91/flexBART.git
 
 # Directory set up

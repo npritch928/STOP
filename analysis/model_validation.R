@@ -5,6 +5,7 @@
 
 data_dir = "../../data/"
 model_dir = "../../data/"
+fig_dir = "../figures/"
 
 # load result data
 pass_player_summary = read.csv(paste0(data_dir, "pass_player_summary.csv"))
@@ -31,9 +32,11 @@ get_calibration_df = function(actual, predicted, width = 0.05, step = 0.01){
 
 plot_calibration_df = function(calibration_df, main, width = 0.05, step = 0.01){
   par(mar = c(2.1, 2.1, 2.1, 2.1))
-  plot(calibration_df$points + width / 2, calibration_df$empirical, type = "p", main = main, xlab = "", ylab = "")
+  plot(calibration_df$points + width / 2, calibration_df$empirical, type = "p", main = main, xlab = "", ylab = "", cex = 0.75)
   lines(calibration_df$points + width / 2, calibration_df$predicted, col = "red")
 }
+
+png(file = paste0(fig_dir, "calibration_plot.png"), width = 6, height = 6, units = "in", res = 300)
 
 # hyperparameters
 w = 0.05
@@ -63,5 +66,22 @@ plot_calibration_df(run_tackle_calibration_df, main = "Tackle Model (Run Plays)"
 mtext("Observed Probability", side = 1, outer = TRUE, padj = 1)
 mtext("Predicted Probability", side = 2, outer = TRUE, padj = -1)
 
+dev.off()
+
 # observed vs expected quantities
+
+png(file = paste0(fig_dir, "x_plot.png"), width = 6, height = 3, units = "in", res = 300)
+
+par(mfrow = c(1, 2), mar = c(2.1, 2.1, 2.1, 2.1), oma=c(2.5,2.5,0,0))
+
+plot(pass_player_summary$tot_contact, pass_player_summary$tot_xcontacts, main = "Contacts", xlab = "", ylab = "", cex = 0.75)
+abline(a = 0, b = 1, col = "blue")
+
+plot(pass_player_summary$tot_tackles, pass_player_summary$tot_xtackles, main = "Tackles", xlab = "", ylab = "", cex = 0.75)
+abline(a = 0, b = 1, col = "blue")
+
+mtext("Observed", side = 1, outer = TRUE, padj = 1)
+mtext("Expected", side = 2, outer = TRUE, padj = -1)
+
+dev.off()
 

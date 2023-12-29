@@ -1,4 +1,4 @@
-# Tackling
+# STOP 
 A public repository for the 2024 NFL Big Data Bowl
 
 # Required R Libraries
@@ -7,6 +7,8 @@ A public repository for the 2024 NFL Big Data Bowl
 - furrr
 - progressr
 - lubridate
+- gganimate
+- git@github.com:skdeshpande91/flexBART.git
 
 # Directory set up
 Within the Tackling repository one should download the data from the NFL Big Data Bowl 2024 and place it within the repository in a repository labeled `data`.

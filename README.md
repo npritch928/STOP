@@ -24,7 +24,7 @@ this script requires the computer to have access to at least 8 cores. If you hav
 - make_contact_tackle_training_data.R 
 
 # Fit models
-To fit the contact and tackle probability models, run both scripts in the `models` directory.
+To fit the contact and tackle probability models, run `fit_contact_model.R` and `fit_tackle_model.R` located in the `models` directory.
 Running both scripts will produce the following outputs:
 - pass_contact_model.RData
 - run_contact_model.RData
@@ -33,3 +33,8 @@ Running both scripts will produce the following outputs:
 - pass_tackle_pred.RData
 - run_tackle_pred.RData
  
+# Compute metrics
+To compute SCOPE and STOP, run `calc_model_results` in the `models` directory.
+Running this script will produce `all_plays.csv` and `pass_player_summary.csv`.
+`all_plays.csv` contains the contact probability, tackle probability, and expected tackles for every player in every play in our dataset.
+`pass_player_summary.csv` contains the expected contacts, expected tackles, observed contacts, and observed tackles on passing plays for each playing in our dataset.

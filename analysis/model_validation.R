@@ -85,3 +85,19 @@ mtext("Expected", side = 2, outer = TRUE, padj = -1)
 
 dev.off()
 
+# variable importance
+
+contact_var_counts = apply(X = pass_contact_model$varcounts, MARGIN = 2, FUN = sum)
+contact_var_names = c(colnames(X_cont_pass), colnames(X_cat_pass))
+contact_var_data = data.frame(var = contact_var_names, counts = contact_var_counts)
+contact_var_data = contact_var_data[order(contact_var_data$counts, decreasing = FALSE),]
+par(mfrow = c(1, 1), mar = c(4.1, 6.1, 2.1, 3.1))
+barplot(contact_var_data$counts, names.arg = contact_var_data$var, horiz = TRUE, las = 1, main = "Contact Model (pass plays)", xlab = "Variable Importance Score")
+
+tackle_var_counts = apply(X = pass_tackle_model$varcounts, MARGIN = 2, FUN = sum)
+tackle_var_names = c(colnames(X_cont_pass), colnames(X_cat_pass))
+tackle_var_data = data.frame(var = tackle_var_names, counts = tackle_var_counts)
+tackle_var_data = tackle_var_data[order(tackle_var_data$counts, decreasing = FALSE),]
+par(mfrow = c(1, 1), mar = c(4.1, 6.1, 2.1, 3.1))
+barplot(tackle_var_data$counts, names.arg = tackle_var_data$var, horiz = TRUE, las = 1, main = "Tackle Model (pass plays)", xlab = "Variable Importance Score")
+

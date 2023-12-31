@@ -3,6 +3,7 @@
 # script to create figures used to analyze and validate probability models
 # NOTE: update model_dir with file path to models
 
+# file paths
 data_dir = "../../data/"
 model_dir = "../../data/"
 fig_dir = "../figures/"

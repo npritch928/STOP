@@ -13,6 +13,7 @@ fig_dir = "../figures/"
 
 # data
 pass_player_summary = read.csv(paste0(data_dir, "pass_player_summary.csv"))
+pass_team_summary = read.csv(paste0(data_dir, "pass_team_summary.csv"))
 filtered_summary = pass_player_summary %>% filter(tot_xtackles >= 5)
 filtered_summary$color = rescale(filtered_summary$STOP, to = c(0, 1), from = c(min(filtered_summary$STOP), max(filtered_summary$STOP)))
 
@@ -89,4 +90,34 @@ text(-10, -18, substitute(bold("Flawed")), cex = 0.9)
 text(10, -18, substitute(bold("Finishers")), cex = 0.9)
 
 dev.off()
+
+# team results
+league_avg_stop = mean(pass_team_summary$STOP)
+league_avg_scope = mean(pass_team_summary$SCOPE)
+team_plot = pass_team_summary %>%
+  ggplot(aes(STOP, SCOPE, label = defensiveTeam)) +
+  geom_hline(yintercept = league_ave_scope, col = "black", linewidth = 0.4) +
+  geom_vline(xintercept = league_avg_stop, col = "black", linewidth = 0.4) +
+  geom_nfl_logos(aes(team_abbr = defensiveTeam), width = 0.075) +
+  xlim(league_avg_stop - 0.15, league_avg_stop + 0.15) +
+  ylim(league_avg_scope - .12, league_avg_scope + .12) +
+  ggtitle("SCOPE and STOP scores by team") +
+  theme_classic() +
+  theme(
+    panel.border = element_rect(colour = "black", fill=NA, linewidth = 0.75),
+    axis.line = element_line(colour = "black", linewidth = 0),
+    panel.grid.major = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+  )
+
+ggsave(
+  file = paste0(fig_dir, "team_plot.png"), 
+  plot = team_plot,
+  width = 600,
+  height = 500,
+  units = "px",
+  scale = 3,
+  bg = "white"
+)
 

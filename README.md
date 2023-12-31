@@ -36,6 +36,10 @@ Running both scripts will produce the following outputs:
  
 # Compute metrics
 To compute SCOPE and STOP, run `calc_model_results` in the `models` directory.
-Running this script will produce `all_plays.csv` and `pass_player_summary.csv`.
+Running this script will produce `all_plays.csv`, `pass_player_summary.csv` and `pass_team_summary.csv`.
 `all_plays.csv` contains the contact probability, tackle probability, and expected tackles for every player in every play in our dataset.
 `pass_player_summary.csv` contains the expected contacts, expected tackles, observed contacts, and observed tackles on passing plays for each playing in our dataset.
+`pass_team_summary.csv` containts the same metrics as the player summary file but is instead grouped by team.
+
+# Analysis
+The scripts in the `analysis` directory contain code to make the figures in the write-up.

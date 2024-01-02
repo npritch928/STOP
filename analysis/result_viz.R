@@ -38,20 +38,21 @@ for (i in 1:nrow(filtered_summary)) {
 # draw legend
 plim = par("usr")
 res = 200
-w = (plim[4] - plim[3]) / (res + 1)
+w = (plim[4] - plim[3] - 10) / (res + 1)
 l = plim[2] + 40 * 0.025
 r = plim[2] + 40 * 0.055
 for (i in 0:res) {
-  p = plim[3] + (w * i) + (w / 2)
+  p = plim[3] + 5 + (w * i) + (w / 2)
   rect(l, p - (w / 2), r, p + (w / 2), border = NA, col = rgb(colorRamp(col_list, bias = 1)(i/res)/255), xpd = TRUE)
 }
-rect(r, plim[3], l, plim[4], xpd = TRUE)
+rect(r, plim[3] + 5, l, plim[4] - 5, xpd = TRUE)
 
 # legend labels
 nlab = 5
-y_tic = (plim[4] - plim[3]) / nlab
+y_tic = (plim[4] - plim[3] - 10) / nlab
 x_tic = plim[2] + (plim[2] - plim[1]) * 0.125
-text(x = rep(x_tic, times = nlab + 1), y = seq(plim[3], plim[4], by = y_tic), labels = round(seq(min(filtered_summary$STOP), max(filtered_summary$STOP), length.out = nlab + 1), 2), cex = 0.75, xpd = TRUE)
+text(x = rep(x_tic, times = nlab + 1), y = seq(plim[3] + 5, plim[4] - 5, by = y_tic), labels = round(seq(min(filtered_summary$STOP), max(filtered_summary$STOP), length.out = nlab + 1), 2), cex = 0.75, xpd = TRUE)
+text(x = 22.5, y = 17, labels = substitute(bold("STOP")), xpd = TRUE)
 
 # superlatives
 top_stop = filtered_summary %>% slice_max(STOP, n = 1)
@@ -70,7 +71,7 @@ low_tae = filtered_summary %>% slice_min(tackles_above_expected, n = 5)
 text(low_tae$tackles_above_expected, low_tae$contacts_above_expected, labels = low_tae$displayName, pos = 2, cex = 0.5)
 
 # label by quadrant
-q1 = filtered_summary %>% filter(contacts_above_expected < 6, contacts_above_expected > 0, tackles_above_expected > 4.8)
+q1 = filtered_summary %>% filter(contacts_above_expected < 6, contacts_above_expected > 0, tackles_above_expected > 4.8, displayName != "T.J. Edwards")
 text(q1$tackles_above_expected, q1$contacts_above_expected, labels = q1$displayName, pos = 4, cex = 0.5)
 
 q2 = filtered_summary %>% filter(contacts_above_expected > 5, tackles_above_expected < -3)
@@ -80,6 +81,9 @@ q4 = filtered_summary %>% filter(contacts_above_expected < 0, tackles_above_expe
 text(q4$tackles_above_expected, q4$contacts_above_expected, labels = q4$displayName, pos = 4, cex = 0.5)
 
 # notable players
+not1 = filtered_summary %>% filter(displayName %in% c("T.J. Edwards"))
+text(not1$tackles_above_expected, not1$contacts_above_expected, labels = not1$displayName, adj = c(-0.15, 1.5), cex = 0.5)
+
 not2 = filtered_summary %>% filter(displayName %in% c("Eli Apple"))
 text(not2$tackles_above_expected, not2$contacts_above_expected, labels = not2$displayName, pos = 2, cex = 0.5)
 

@@ -6,6 +6,7 @@
 # packages
 library(dplyr)
 library(scales)
+library(nflplotR)
 
 # file paths
 data_dir = "../data/"
@@ -21,8 +22,10 @@ png(file = paste0(fig_dir, "archetype_plot.png"), width = 6, height = 6, units =
 
 col_list = rev(RColorBrewer::brewer.pal(n = 11, name = "RdYlBu"))
 par(mar = c(4.1, 4.1, 3.1, 4.1))  # bottom, left, top, right
-plot(1, type = "n", xlim = c(-18, 18), ylim = c(-18, 18), main = "Tackling archetypes by STOP", xlab = "Tackles above expected", ylab = "Contacts above expected", xpd = TRUE)
-abline(h = 0, v = 0)
+avg_cae = mean(filtered_summary$contacts_above_expected)
+avg_tae = mean(filtered_summary$tackles_above_expected)
+plot(1, type = "n", xlim = c(avg_tae - 18, avg_tae + 18), ylim = c(avg_cae - 18, avg_cae + 18), main = "Tackling archetypes by STOP", xlab = "Tackles above expected", ylab = "Contacts above expected", xpd = TRUE)
+abline(h = avg_cae, v = avg_tae)
 for (i in 1:nrow(filtered_summary)) {
   points(
     filtered_summary$tackles_above_expected[i],
@@ -84,10 +87,10 @@ not4 = filtered_summary %>% filter(displayName %in% c("Devin McCourty", "Bobby W
 text(not4$tackles_above_expected, not4$contacts_above_expected, labels = not4$displayName, pos = 4, cex = 0.5)
 
 # quadrant labels
-text(10, 18, substitute(bold("Complete")), cex = 0.9)
-text(-10, 18, substitute(bold("Positional")), cex = 0.9)
-text(-10, -18, substitute(bold("Flawed")), cex = 0.9)
-text(10, -18, substitute(bold("Finishers")), cex = 0.9)
+text(avg_tae + 10, avg_cae + 18, substitute(bold("Complete")), cex = 0.9)
+text(avg_tae - 10, avg_cae + 18, substitute(bold("Positional")), cex = 0.9)
+text(avg_tae - 10, avg_cae - 18, substitute(bold("Flawed")), cex = 0.9)
+text(avg_tae + 10, avg_cae - 18, substitute(bold("Finishers")), cex = 0.9)
 
 dev.off()
 
@@ -112,7 +115,7 @@ team_plot = pass_team_summary %>%
   )
 
 ggsave(
-  file = paste0(fig_dir, "team_plot.png"), 
+  file = paste0(fig_dir, "team_plot.png"),
   plot = team_plot,
   width = 600,
   height = 500,

@@ -4,8 +4,8 @@
 # NOTE: update model_dir with file path to models
 
 # file paths
-data_dir = "../../data/"
-model_dir = "../../data/"
+data_dir = "../data/"
+model_dir = "../data/"
 fig_dir = "../figures/"
 
 # load result data
@@ -33,7 +33,7 @@ get_calibration_df = function(actual, predicted, width = 0.05, step = 0.01){
 
 plot_calibration_df = function(calibration_df, main, width = 0.05, step = 0.01){
   par(mar = c(2.1, 2.1, 2.1, 2.1))
-  plot(calibration_df$points + width / 2, calibration_df$empirical, type = "p", main = main, xlab = "", ylab = "", cex = 0.75)
+  plot(calibration_df$points + width / 2, calibration_df$empirical, type = "p", xlim = c(0, 1), ylim = c(0, 1), main = main, xlab = "", ylab = "", cex = 0.75)
   lines(calibration_df$points + width / 2, calibration_df$predicted, col = "red")
 }
 

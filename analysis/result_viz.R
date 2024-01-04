@@ -20,7 +20,7 @@ filtered_summary$color = rescale(filtered_summary$STOP, to = c(0, 1), from = c(m
 
 png(file = paste0(fig_dir, "archetype_plot.png"), width = 6, height = 6, units = "in", res = 300)
 
-col_list = rev(RColorBrewer::brewer.pal(n = 11, name = "RdYlBu"))
+col_list  = colorRampPalette(colors = c('#762A83', '#9970AB', '#C2A5CF', '#FEE391',  '#FB9A29', '#CC4C02'), interpolate = "spline")(12)
 par(mar = c(4.1, 4.1, 3.1, 4.1))  # bottom, left, top, right
 avg_cae = mean(filtered_summary$contacts_above_expected)
 avg_tae = mean(filtered_summary$tackles_above_expected)

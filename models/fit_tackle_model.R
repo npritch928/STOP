@@ -176,6 +176,7 @@ pass_tackle_samples = predict_flexBART(
   verbose = TRUE
 )
 pass_tackle_pred = apply(pass_tackle_samples, MARGIN = 2, FUN = mean)
+save(pass_tackle_samples, file = paste0(data_dir, "pass_tackle_samples.RData"))
 save(pass_tackle_pred, file = paste0(data_dir, "pass_tackle_pred.RData"))
 
 X_cont_test_run = get_x_cont(run_contact_info, type = "run")

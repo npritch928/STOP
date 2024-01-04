@@ -153,3 +153,14 @@ run_contact_model = probit_flexBART(
 
 # save model and inputs
 save(run_contact_model, Y_train_run, X_cont_run, X_cat_run, unif_cuts_run, cutpoints_list_run, cat_levels_list_run, file = paste0(model_dir, "run_contact_model.RData"))
+
+# predict samples for pass model
+X_cont_test_pass = get_x_cont(pass_contact_info, type = "pass")
+X_cat_test_pass = get_x_cat(pass_contact_info, bc_lvls = pass_bcId_idx, pos_lvls = pass_pos_idx)
+pass_contact_samples = predict_flexBART(
+  fit = pass_contact_model,
+  X_cont = X_cont_test_pass,
+  X_cat = X_cat_test_pass,
+  verbose = TRUE
+)
+save(pass_contact_samples, file = paste0(data_dir, "pass_contact_samples.RData"))

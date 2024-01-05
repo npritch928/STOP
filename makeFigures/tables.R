@@ -2,20 +2,23 @@ library(tidyverse)
 library(htmltools)
 library(reactable)
 library(reactablefmtr)
+library(webshot)
+library(htmlwidgets)
+pos <- "LB"
 min_tot_tackle <- 5
 min_tot_plays <- 5
-# Function that makes the tables with a varied color intensity based on the levels of STOP and SCOPE within a position
 mkTable <- function(pos, min_tot_tack = min_tot_tackle, min_tot_play = min_tot_plays){
-  df <- read_csv("nfl-big-data-bowl-2024/stop_pass_summary.csv") %>%
+  df <- read_csv("nfl-big-data-bowl-2024/pass_player_summary.csv") %>%
+    rename(SCOP = SCOPE) %>%
     filter(pos_group == pos,
          tot_xtackles >= min_tot_tack,
          n_plays >= min_tot_play)
     #Get color range for STOP
     STOP_normalized <- (df$STOP - min(df$STOP)) / (max(df$STOP) - min(df$STOP))
-    STOP_colors <-  rgb(colorRamp(c("#FAFAFA", "#E02800"))(STOP_normalized), maxColorValue = 255)
+    STOP_colors <-  rgb(colorRamp(c("#FAFAFA", "#CC4C02"))(STOP_normalized), maxColorValue = 255)
     #Get color range for SCOP
     SCOP_normalized <- (df$SCOP - min(df$SCOP)) / (max(df$SCOP) - min(df$SCOP))
-    SCOP_colors <-  rgb(colorRamp(c("#F2F8FF", "#006DF0"))(SCOP_normalized), maxColorValue = 255)
+    SCOP_colors <-  rgb(colorRamp(c("#F2F8FF", "#762A83"))(SCOP_normalized), maxColorValue = 255)
     #Create Table
     df  %>%
       select(displayName, position, tot_tackles, STOP, SCOP) %>%
@@ -111,7 +114,16 @@ mkTable <- function(pos, min_tot_tack = min_tot_tackle, min_tot_play = min_tot_p
                font_weight = "normal")
 }
 lb <- mkTable("LB", min_tot_tack = 5)
+html <- "lbSTOP.html"
+htmlwidgets::saveWidget(lb, html)
+webshot(html, "lbSTOP.png")
 
 db <- mkTable("DB", min_tot_tack = 5)
-lb
-db
+html <- "dbSTOP.html"
+htmlwidgets::saveWidget(db, html)
+webshot(html, "dbSTOP.png")
+
+dl <- mkTable("DL", min_tot_tack = 2)
+html <- "dlSTOP.html"
+htmlwidgets::saveWidget(dl, html)
+webshot(html, "dlSTOP.png")

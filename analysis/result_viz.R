@@ -9,7 +9,7 @@ library(scales)
 library(nflplotR)
 
 # file paths
-data_dir = "../data/"
+data_dir = "../../data/"
 fig_dir = "../figures/"
 
 # data
@@ -41,6 +41,7 @@ l = plim[2] + (2.4) * 0.025
 r = plim[2] + (2.4) * 0.055
 leg_len = 0.75
 sign = 1
+res = 200
 flip_cols = FALSE
 len_adj = (plim[4] - plim[3]) * (1 - leg_len)
 w = (plim[4] - plim[3] - len_adj) / (res + 1)
@@ -97,7 +98,7 @@ text(q4$STOP, q4$SCOPE, labels = q4$displayName, pos = 4, cex = 0.5)
 
 # quadrant labels
 text(avg_STOP + (plim[2] - avg_STOP) / 2, plim[4] * .95, substitute(bold("Complete")), cex = 0.9)
-text(avg_STOP + (plim[1] - avg_STOP) / 2, plim[4] * .95, substitute(bold("Positional")), cex = 0.9)
+text(avg_STOP + (plim[1] - avg_STOP) / 2, plim[4] * .95, substitute(bold("Assisters")), cex = 0.9)
 text(avg_STOP + (plim[1] - avg_STOP) / 2, plim[3] * 1.3, substitute(bold("Flawed")), cex = 0.9)
 text(avg_STOP + (plim[2] - avg_STOP) / 2, plim[3] * 1.3, substitute(bold("Finishers")), cex = 0.9)
 

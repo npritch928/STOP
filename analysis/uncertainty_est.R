@@ -71,14 +71,9 @@ pass_player_all = pass_player_summary %>%
 write.csv(pass_player_all, file = paste0(data_dir, "pass_player_all.csv"))
 
 # visualizations
-# https://clauswilke.com/dataviz/visualizing-uncertainty.html
 
 pass_player_all = read.csv(paste0(data_dir, "pass_player_all.csv"))
 filtered_summary = pass_player_all %>% filter(tot_xtackles >= 5)
-
-
-
-
 filtered_summary$color = scales::rescale(filtered_summary$tot_xtackles, to = c(0, 1), from = c(min(filtered_summary$tot_xtackles), max(filtered_summary$tot_xtackles)))
 
 top_stop_lb = filtered_summary %>% 
@@ -86,13 +81,13 @@ top_stop_lb = filtered_summary %>%
   # slice_max(STOP, n = 10) %>%
   arrange(desc(STOP))
 
-# png(file = paste0(fig_dir, "lb_uncertainty_plot.png"), width = 1000, height = 500, units = "px", pointsize = 16)
+png(file = paste0(fig_dir, "lb_uncertainty_plot.png"), width = 1000, height = 500, units = "px", pointsize = 16)
 
 col_list  = colorRampPalette(colors = c('#762A83', '#9970AB', '#C2A5CF', '#FEE391',  '#FB9A29', '#CC4C02'), interpolate = "linear")(12)
 
 # every LB
 par(mar = c(2.1, 4.1, 3.1, 5.1))  # bottom, left, top, right
-plot(x = 1:80, type = "n", ylim = c(0.2, 2.5), main = "Top 10 Scores for LBs (90% Credible Interval)", ylab = "STOP", xlab = "", xaxt = 'n')
+plot(x = 1:80, type = "n", ylim = c(0.2, 2.5), main = "90% Credible Interval of STOP scores for LBs (min. 5 expected tackles)", ylab = "STOP", xlab = "", xaxt = 'n')
 # plot(1:80, top_stop_lb$STOP, ylim = c(0.2, 2.5), main = "Top 10 Scores for LBs (90% Credible Interval)", ylab = "STOP", xlab = "", xaxt = 'n', pch = 16)
 abline(v = 23.5, lty = 2)
 abline(v = 42.5, lty = 2)
@@ -119,59 +114,8 @@ nlab = 5
 y_tic = (plim[4] - plim[3] - 0.6) / nlab
 x_tic = plim[2] - 4 + (plim[2] - plim[1]) * 0.125
 text(x = rep(x_tic, times = nlab + 1), y = seq(plim[3] + 0.3, plim[4] - 0.3, by = y_tic), labels = round(seq(min(filtered_summary$tot_xtackles), max(filtered_summary$tot_xtackles), length.out = nlab + 1), 2), cex = 0.75, xpd = TRUE)
-text(x = 87.5, y = 2.6, labels = substitute(bold("Expected")), xpd = TRUE)
-text(x = 87.5, y = 2.5, labels = substitute(bold("Tackles")), xpd = TRUE)
-text(x = 11, y = 0.3, "Performed Above Expected")
-text(x = 63, y = 0.3, "Performed Below Expected")
-
-# dev.off()
-
-
-
-
-
-
-filtered_summary$color = scales::rescale(filtered_summary$SCOPE, to = c(0, 1), from = c(min(filtered_summary$SCOPE), max(filtered_summary$SCOPE)))
-
-top_stop_lb = filtered_summary %>% 
-  filter(tot_xtackles >= 5, pos_group == "LB") %>%
-  # slice_max(STOP, n = 10) %>%
-  arrange(desc(STOP))
-
-png(file = paste0(fig_dir, "lb_uncertainty_plot.png"), width = 1000, height = 500, units = "px", pointsize = 16)
-
-col_list  = colorRampPalette(colors = c('#762A83', '#9970AB', '#C2A5CF', '#FEE391',  '#FB9A29', '#CC4C02'), interpolate = "spline")(12)
-
-# every LB
-par(mar = c(2.1, 4.1, 3.1, 5.1))  # bottom, left, top, right
-plot(x = 1:80, type = "n", ylim = c(0.2, 2.5), main = "Top 10 Scores for LBs (90% Credible Interval)", ylab = "STOP", xlab = "", xaxt = 'n')
-# plot(1:80, top_stop_lb$STOP, ylim = c(0.2, 2.5), main = "Top 10 Scores for LBs (90% Credible Interval)", ylab = "STOP", xlab = "", xaxt = 'n', pch = 16)
-abline(v = 23.5, lty = 2)
-abline(v = 42.5, lty = 2)
-abline(h = 1)
-for(i in 1:80){
-  points(x = i, y = top_stop_lb$STOP[i], pch = 16, col = rgb(colorRamp(col_list, bias = 1)(top_stop_lb$color[i])/255))
-  arrows(i, top_stop_lb$STOP_5[i], i, top_stop_lb$STOP_95[i], code = 3, angle = 90, lwd = 2, length = 0.025, col = rgb(colorRamp(col_list, bias = 1)(top_stop_lb$color[i])/255))
-}
-
-# draw legend
-plim = par("usr")
-res = 200
-w = (plim[4] - plim[3] - 0.6) / (res + 1)
-l = plim[2] + 1.5
-r = plim[2] + 3
-for (i in 0:res) {
-  p = plim[3] + 0.3 + (w * i) + (w / 2)
-  rect(l, p + (w / 2), r, p - (w / 2), border = NA, col = rgb(colorRamp(col_list, bias = 1)(i/res)/255), xpd = TRUE)
-}
-rect(r, plim[3] + 0.3, l, plim[4] - 0.3, xpd = TRUE)
-
-# legend labels
-nlab = 5
-y_tic = (plim[4] - plim[3] - 0.6) / nlab
-x_tic = plim[2] - 4 + (plim[2] - plim[1]) * 0.125
-text(x = rep(x_tic, times = nlab + 1), y = seq(plim[3] + 0.3, plim[4] - 0.3, by = y_tic), labels = round(seq(min(filtered_summary$SCOPE), max(filtered_summary$SCOPE), length.out = nlab + 1), 2), cex = 0.75, xpd = TRUE)
-text(x = 87.5, y = 2.5, labels = substitute(bold("SCOPE")), xpd = TRUE)
+text(x = 88, y = 2.55, labels = substitute(bold("Expected")), xpd = TRUE)
+text(x = 88, y = 2.45, labels = substitute(bold("Tackles")), xpd = TRUE)
 text(x = 11, y = 0.3, "Performed Above Expected")
 text(x = 63, y = 0.3, "Performed Below Expected")
 
@@ -186,8 +130,7 @@ png(file = paste0(fig_dir, "db_uncertainty_plot.png"), width = 1000, height = 50
 
 # every DB
 par(mar = c(2.1, 4.1, 3.1, 5.1))  # bottom, left, top, right
-plot(x = 1:210, type = "n", ylim = c(0.2, 3.5), main = "Top 10 Scores for DBs (90% Credible Interval)", ylab = "STOP", xlab = "", xaxt = 'n')
-# plot(1:80, top_stop_lb$STOP, ylim = c(0.2, 2.5), main = "Top 10 Scores for LBs (90% Credible Interval)", ylab = "STOP", xlab = "", xaxt = 'n', pch = 16)
+plot(x = 1:210, type = "n", ylim = c(0.2, 3.5), main = "90% Credible Interval of STOP scores for DBs (min. 5 expected tackles)", ylab = "STOP", xlab = "", xaxt = 'n')
 abline(v = 65.5, lty = 2)
 abline(v = 115.5, lty = 2)
 abline(h = 1)
@@ -199,21 +142,22 @@ for(i in 1:210){
 # draw legend
 plim = par("usr")
 res = 200
-w = (plim[4] - plim[3] - 0.6) / (res + 1)
+w = (plim[4] - plim[3] - 0.9) / (res + 1)
 l = plim[2] + 4
 r = plim[2] + 8
 for (i in 0:res) {
-  p = plim[3] + 0.3 + (w * i) + (w / 2)
+  p = plim[3] + 0.45 + (w * i) + (w / 2)
   rect(l, p + (w / 2), r, p - (w / 2), border = NA, col = rgb(colorRamp(col_list, bias = 1)(i/res)/255), xpd = TRUE)
 }
-rect(r, plim[3] + 0.3, l, plim[4] - 0.3, xpd = TRUE)
+rect(r, plim[3] + 0.45, l, plim[4] - 0.45, xpd = TRUE)
 
 # legend labels
 nlab = 5
-y_tic = (plim[4] - plim[3] - 0.6) / nlab
+y_tic = (plim[4] - plim[3] - 0.9) / nlab
 x_tic = plim[2] - 10 + (plim[2] - plim[1]) * 0.125
-text(x = rep(x_tic, times = nlab + 1), y = seq(plim[3] + 0.3, plim[4] - 0.3, by = y_tic), labels = round(seq(min(filtered_summary$SCOPE), max(filtered_summary$SCOPE), length.out = nlab + 1), 2), cex = 0.75, xpd = TRUE)
-text(x = 231, y = 3.55, labels = substitute(bold("SCOPE")), xpd = TRUE)
+text(x = rep(x_tic, times = nlab + 1), y = seq(plim[3] + 0.45, plim[4] - 0.45, by = y_tic), labels = round(seq(min(filtered_summary$tot_xtackles), max(filtered_summary$tot_xtackles), length.out = nlab + 1), 2), cex = 0.75, xpd = TRUE)
+text(x = 231, y = 3.55, labels = substitute(bold("Expected")), xpd = TRUE)
+text(x = 231, y = 3.4, labels = substitute(bold("Tackles")), xpd = TRUE)
 text(x = 30, y = 0.35, "Performed Above Expected")
 text(x = 160, y = 0.35, "Performed Below Expected")
 
